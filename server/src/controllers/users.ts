@@ -1,8 +1,8 @@
 import express from "express";
 
 // all important methods and helpers
-import { something_wrong } from "../config/static";
-import { getUsers, getUserById, deleteUserById } from "../db/users";
+import { something_wrong, not_change_email } from "../config/static";
+import { getUsers, getUserById, updateUserById, deleteUserById } from "../db/users";
 
 // get all users from the list
 export const getAllUsers = async (
@@ -38,20 +38,15 @@ export const updateUser = async (
 ) => {
   try {
     const { id } = req.params;
-    const { username } = req.body;
+    const { email } = req.body;
 
-    // validate the username exist or not
-    if(!username) {
-      return res.status(400).json({ 
-        msg: `${username} does not exist.` 
-      });
+    // validate email field
+    if (email) {
+      return res.status(400).json({ msg: `${not_change_email} ${email}` });
     }
 
-    const user = await getUserById(id);
-    user.username = username;
-    await user.save();
-
-    return res.status(200).json(user).end();
+    const updateUserInfo = await updateUserById(id, req.body);
+    return res.status(200).json(updateUserInfo).end();
   } catch(error) {
     return res.status(400).json({ msg: something_wrong });
   }
