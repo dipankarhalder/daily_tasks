@@ -1,14 +1,14 @@
 import express from "express";
-
-// all routes import
 import authentication from "./authentication";
+import contact from "./contact";
 import users from "./users";
 
-// router with default exported
 const router = express.Router();
+
 export default (): express.Router => {
   authentication(router);
   users(router);
+  contact(router);
 
   return router;
 }
