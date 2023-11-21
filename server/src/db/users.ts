@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// authentication user db schema
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true },
@@ -11,11 +10,8 @@ const UserSchema = new mongoose.Schema({
     sessionToken: { type: String, select: false }
   }
 });
-
-// schema convert to model
 export const UserModel = mongoose.model('User', UserSchema);
 
-// get user methods
 export const getUsers = () => {
   return UserModel.find();
 }
@@ -28,8 +24,6 @@ export const getUserByEmail = (email: string) => {
 export const getUserBySessionToken = (sessionToken: string) => {
   return UserModel.findOne({ 'authentication.sessionToken': sessionToken, });
 }
-
-// create, update, delete users methods
 export const createUser = (values: Record<string, any>) => {
   return new UserModel(values).save().then((user) => user.toObject());
 }

@@ -5,19 +5,14 @@ const subNumbersSchema = new mongoose.Schema({
   country: String,
   phone: String,
 });
-
-// contact db schema
 const ContactSchema = new mongoose.Schema({
   name: { type: String, required: true },
   phone: [subNumbersSchema],
   notype: { type: String, required: true },
   email: { type: String, },
 });
-
-// schema convert to model
 export const ContactModel = mongoose.model('Contact', ContactSchema);
 
-// get contact methods
 export const getContacts = () => {
   return ContactModel.find();
 }

@@ -5,12 +5,12 @@ import {
   associated_info,
   blank_user_info, 
   exist_contact 
-} from "../config/static";
+} from "../../config/static";
 import { 
   getContacts, 
   getContactByPhone, 
   createContact, 
-} from "../db/contact";
+} from "../../db/contact";
 
 /* 
   @method: GET

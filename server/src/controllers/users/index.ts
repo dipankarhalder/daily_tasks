@@ -1,10 +1,12 @@
 import express from "express";
+import { something_wrong, not_change_email } from "../../config/static";
+import { 
+  getUsers, 
+  getUserById, 
+  updateUserById, 
+  deleteUserById 
+} from "../../db/users";
 
-// all important methods and helpers
-import { something_wrong, not_change_email } from "../config/static";
-import { getUsers, getUserById, updateUserById, deleteUserById } from "../db/users";
-
-// get all users from the list
 export const getAllUsers = async (
   req: express.Request, 
   res: express.Response
@@ -17,7 +19,6 @@ export const getAllUsers = async (
   }
 }
 
-// delete the user based on id
 export const viewUser = async (
   req: express.Request, 
   res: express.Response
@@ -31,7 +32,6 @@ export const viewUser = async (
   }
 }
 
-// update the user based on id
 export const updateUser = async (
   req: express.Request, 
   res: express.Response
@@ -39,8 +39,6 @@ export const updateUser = async (
   try {
     const { id } = req.params;
     const { email } = req.body;
-
-    // validate email field
     if (email) {
       return res.status(400).json({ msg: `${not_change_email} ${email}` });
     }
@@ -52,7 +50,6 @@ export const updateUser = async (
   }
 }
 
-// delete the user based on id
 export const deleteUser = async (
   req: express.Request, 
   res: express.Response
