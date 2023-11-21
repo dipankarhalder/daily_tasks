@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const subNumbersSchema = new mongoose.Schema({
-  name: String,
+  title: String,
   country: String,
   phone: String,
 });

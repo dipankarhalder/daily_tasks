@@ -2,6 +2,9 @@ export const cookie_name = "DIPANKAR-REST-API";
 export const run_server = "Server running on:";
 export const mongo_error = "MongoDB connection error:";
 export const mongo_succ = "Connected to MongoDB!";
+export const blank_validation_message = "should not be blank.";
+export const associated_info = "already associated with a user.";
+
 export const blank_user_info = "username, email, password should not be blank.";
 export const email_pass = "email, password should not be blank.";
 export const not_email = "is not associated with any account, Please enter correct email.";
