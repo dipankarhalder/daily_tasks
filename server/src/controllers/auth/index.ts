@@ -1,65 +1,96 @@
 import express from "express";
-import { 
-  cookie_name, 
-  blank_user_info, 
-  email_pass, 
-  not_email, 
-  wrong_pass, 
-  exist_user, 
-  something_wrong 
+import {
+  cookie_name,
+  userValidate,
+  emailValidate,
+  emailRegex,
+  emailReg,
+  passwordValidate,
+  phoneValidate,
+  notEmail,
+  wrongPass,
+  existUser,
+  somethingWrong,
 } from "../../config/static";
-import { getUserByEmail, createUser } from "../../db/users";
+import { getUserByEmail, getUserByPhone, createUser } from "../../db/users";
 import { random, authentication } from "../../helpers";
 
-export const login = async (
-  req: express.Request, 
-  res: express.Response
-) => {
-  try{
+/* 
+  @method: POST
+  @endpoint: /v1/auth/signin
+  @details: login
+*/
+export const login = async (req: express.Request, res: express.Response) => {
+  try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ msg: email_pass });
+    if (!email) {
+      return res.status(400).json({ msg: emailValidate });
+    }
+    if (!password) {
+      return res.status(400).json({ msg: passwordValidate });
     }
 
-    const user = await getUserByEmail(email)
-      .select('+authentication.salt +authentication.password');
+    const user = await getUserByEmail(email).select(
+      "+authentication.salt +authentication.password"
+    );
     if (!user) {
-      return res.status(400).json({ msg: `${email} ${not_email}` });
+      return res.status(400).json({ msg: `${email} ${notEmail}` });
     }
 
     const expectedHash = authentication(user.authentication.salt, password);
     if (user.authentication.password !== expectedHash) {
-      return res.status(400).json({ msg: wrong_pass });
+      return res.status(400).json({ msg: wrongPass });
     }
 
     const salt = random();
-    user.authentication.sessionToken = authentication(salt, user._id.toString());
-    await user.save();
-    res.cookie(
-      cookie_name, 
-      user.authentication.sessionToken, 
-      { domain: 'localhost', path: "/" }
+    user.authentication.sessionToken = authentication(
+      salt,
+      user._id.toString()
     );
+    await user.save();
+    res.cookie(cookie_name, user.authentication.sessionToken, {
+      domain: "localhost",
+      path: "/",
+    });
 
     return res.status(200).json(user).end();
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
-}
+};
 
-export const register = async (
-  req: express.Request, 
-  res: express.Response
-) => {
+/* 
+  @method: POST
+  @endpoint: /v1/auth/signup
+  @details: register
+*/
+export const register = async (req: express.Request, res: express.Response) => {
   try {
     const { username, email, phone, password } = req.body;
-    if (!username || !email || !phone || !password) {
-      return res.status(400).json({ msg: blank_user_info });
+    if (!username) {
+      return res.status(400).json({ msg: userValidate });
     }
-    
-    const existingUser = await getUserByEmail(email);
-    if (existingUser) {
-      return res.status(400).json({ msg: `${email} ${exist_user}` });
+    if (!email) {
+      return res.status(400).json({ msg: emailValidate });
+    }
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ msg: emailReg });
+    }
+    if (!phone) {
+      return res.status(400).json({ msg: phoneValidate });
+    }
+    if (!password) {
+      return res.status(400).json({ msg: passwordValidate });
+    }
+
+    const existingEmail = await getUserByEmail(email);
+    if (existingEmail) {
+      return res.status(400).json({ msg: `${email} ${existUser}` });
+    }
+
+    const existingPhone = await getUserByPhone(phone);
+    if (existingPhone) {
+      return res.status(400).json({ msg: `${phone} ${existUser}` });
     }
 
     const salt = random();
@@ -75,6 +106,6 @@ export const register = async (
 
     return res.status(200).json(newUser).end();
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
-}
+};

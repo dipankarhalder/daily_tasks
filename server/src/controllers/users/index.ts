@@ -1,5 +1,5 @@
 import express from "express";
-import { something_wrong, not_change_email } from "../../config/static";
+import { somethingWrong, readOnlyEmail } from "../../config/static";
 import {
   getUsers,
   getUserById,
@@ -20,7 +20,7 @@ export const getAllUsers = async (
     const users = await getUsers();
     return res.status(200).json(users);
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
 };
 
@@ -35,12 +35,12 @@ export const viewUser = async (req: express.Request, res: express.Response) => {
     const user = await getUserById(id);
     return res.json(user);
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
 };
 
 /* 
-  @method: PUT
+  @method: PATCH
   @endpoint: /v1/user/:id
   @details: update any item from user 
 */
@@ -51,14 +51,15 @@ export const updateUser = async (
   try {
     const { id } = req.params;
     const { email } = req.body;
+
     if (email) {
-      return res.status(400).json({ msg: `${not_change_email} ${email}` });
+      return res.status(400).json({ msg: `${readOnlyEmail} ${email}` });
     }
 
     const updateUserInfo = await updateUserById(id, req.body);
     return res.status(200).json(updateUserInfo).end();
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
 };
 
@@ -76,6 +77,6 @@ export const deleteUser = async (
     const deleteRecord = await deleteUserById(id);
     return res.json(deleteRecord);
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
 };
