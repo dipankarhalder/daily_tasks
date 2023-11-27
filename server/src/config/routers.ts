@@ -7,8 +7,7 @@ export const USERS = '/v1/users';
 export const USER = '/v1/user/:id';
 
 // contact information
-export const CONTACTS = '/v1/contacts';
-export const CONTACT = '/v1/contact';
+export const CONTACT = '/v1/contact/:id';
 
 // expense information
 export const EXPENSES = '/v1/expenses';

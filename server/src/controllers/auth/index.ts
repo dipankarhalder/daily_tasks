@@ -1,4 +1,5 @@
 import express from 'express';
+import { UserModel } from '../../db/users';
 import {
   cookie_name,
   userValidate,
@@ -12,7 +13,10 @@ import {
   existUser,
   somethingWrong,
 } from '../../config/static';
-import { getUserByEmail, getUserByPhone, createUser } from '../../db/users';
+import {
+  _getListByField,
+  _createItem,
+} from '../../db/shared';
 import { random, authentication } from '../../helpers';
 
 /* 
@@ -20,24 +24,37 @@ import { random, authentication } from '../../helpers';
   @endpoint: /v1/auth/signin
   @details: login
 */
-export const login = async (req: express.Request, res: express.Response) => {
+export const login = async (
+  req: express.Request,
+  res: express.Response
+) => {
   try {
     const { email, password } = req.body;
     if (!email) {
       return res.status(400).json({ msg: emailValidate });
     }
     if (!password) {
-      return res.status(400).json({ msg: passwordValidate });
+      return res
+        .status(400)
+        .json({ msg: passwordValidate });
     }
 
-    const user = await getUserByEmail(email).select(
+    const user = await _getListByField(
+      UserModel,
+      email
+    ).select(
       '+authentication.salt +authentication.password'
     );
     if (!user) {
-      return res.status(400).json({ msg: `${email} ${notEmail}` });
+      return res
+        .status(400)
+        .json({ msg: `${email} ${notEmail}` });
     }
 
-    const expectedHash = authentication(user.authentication.salt, password);
+    const expectedHash = authentication(
+      user.authentication.salt,
+      password
+    );
     if (user.authentication.password !== expectedHash) {
       return res.status(400).json({ msg: wrongPass });
     }
@@ -48,14 +65,24 @@ export const login = async (req: express.Request, res: express.Response) => {
       user._id.toString()
     );
     await user.save();
-    res.cookie(cookie_name, user.authentication.sessionToken, {
-      domain: 'localhost',
-      path: '/',
-    });
+    res.cookie(
+      cookie_name,
+      user.authentication.sessionToken,
+      {
+        domain: 'localhost',
+        path: '/',
+      }
+    );
 
-    return res.status(200).json(user).end();
+    return res
+      .json({ code: 200, data: user, message: '' })
+      .end();
   } catch (error) {
-    return res.status(400).json({ msg: somethingWrong });
+    return res.json({
+      code: 400,
+      data: null,
+      message: somethingWrong,
+    });
   }
 };
 
@@ -64,7 +91,10 @@ export const login = async (req: express.Request, res: express.Response) => {
   @endpoint: /v1/auth/signup
   @details: register
 */
-export const register = async (req: express.Request, res: express.Response) => {
+export const register = async (
+  req: express.Request,
+  res: express.Response
+) => {
   try {
     const { username, email, phone, password } = req.body;
     if (!username) {
@@ -80,21 +110,33 @@ export const register = async (req: express.Request, res: express.Response) => {
       return res.status(400).json({ msg: phoneValidate });
     }
     if (!password) {
-      return res.status(400).json({ msg: passwordValidate });
+      return res
+        .status(400)
+        .json({ msg: passwordValidate });
     }
 
-    const existingEmail = await getUserByEmail(email);
+    const existingEmail = await _getListByField(
+      UserModel,
+      email
+    );
     if (existingEmail) {
-      return res.status(400).json({ msg: `${email} ${existUser}` });
+      return res
+        .status(400)
+        .json({ msg: `${email} ${existUser}` });
     }
 
-    const existingPhone = await getUserByPhone(phone);
+    const existingPhone = await _getListByField(
+      UserModel,
+      phone
+    );
     if (existingPhone) {
-      return res.status(400).json({ msg: `${phone} ${existUser}` });
+      return res
+        .status(400)
+        .json({ msg: `${phone} ${existUser}` });
     }
 
     const salt = random();
-    const newUser = await createUser({
+    const newUser = await _createItem(UserModel, {
       email,
       username,
       phone,
@@ -104,8 +146,14 @@ export const register = async (req: express.Request, res: express.Response) => {
       },
     });
 
-    return res.status(200).json(newUser).end();
+    return res
+      .json({ code: 200, data: newUser, message: '' })
+      .end();
   } catch (error) {
-    return res.status(400).json({ msg: somethingWrong });
+    return res.json({
+      code: 400,
+      data: null,
+      message: somethingWrong,
+    });
   }
 };
