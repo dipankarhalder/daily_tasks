@@ -1,24 +1,34 @@
 import express from 'express';
-import { EXPENSES, EXPENSE } from '../config/routers';
-import { isAuthenticated } from '../middlewares';
+import { EXPENSE } from '../config/routers';
+import { isAuthenticated, isOwner } from '../middlewares';
 import {
-  addContact,
-  getAllContacts,
-  updateContact,
-  deleteContact,
-} from '../controllers/contact';
+  getAllExpenses,
+  addExpense,
+} from '../controllers/expense';
 
 export default (router: express.Router) => {
-  router.get(EXPENSES, isAuthenticated, getAllContacts);
-  router.post(EXPENSE, isAuthenticated, addContact);
-  router.patch(
-    `${EXPENSE}/:id`,
+  router.get(
+    EXPENSE,
     isAuthenticated,
-    updateContact
+    isOwner,
+    getAllExpenses
   );
-  router.delete(
-    `${EXPENSE}/:id`,
+  router.post(
+    EXPENSE,
     isAuthenticated,
-    deleteContact
+    isOwner,
+    addExpense
   );
+  // router.patch(
+  //   `${EXPENSE}/:id`,
+  //   isAuthenticated,
+  //   isOwner,
+  //   updateContact
+  // );
+  // router.delete(
+  //   `${EXPENSE}/:id`,
+  //   isAuthenticated,
+  //   isOwner,
+  //   deleteContact
+  // );
 };
