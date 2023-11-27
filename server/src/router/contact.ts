@@ -1,5 +1,5 @@
 import express from 'express';
-import { CONTACTS, CONTACT } from '../config/routers';
+import { CONTACT } from '../config/routers';
 import { isAuthenticated, isOwner } from '../middlewares';
 import {
   addContact,
@@ -9,8 +9,28 @@ import {
 } from '../controllers/contact';
 
 export default (router: express.Router) => {
-  router.get(`${CONTACTS}/:id`, isAuthenticated, isOwner, getAllContacts);
-  router.post(`${CONTACT}/:id`, isAuthenticated, isOwner, addContact);
-  router.patch(`${CONTACT}/:id`, isAuthenticated, isOwner, updateContact);
-  router.delete(`${CONTACT}/:id`, isAuthenticated, isOwner, deleteContact);
+  router.get(
+    `${CONTACT}`,
+    isAuthenticated,
+    isOwner,
+    getAllContacts
+  );
+  router.post(
+    `${CONTACT}`,
+    isAuthenticated,
+    isOwner,
+    addContact
+  );
+  router.patch(
+    `${CONTACT}/:contact`,
+    isAuthenticated,
+    isOwner,
+    updateContact
+  );
+  router.delete(
+    `${CONTACT}/:contact`,
+    isAuthenticated,
+    isOwner,
+    deleteContact
+  );
 };

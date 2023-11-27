@@ -1,11 +1,17 @@
 import express from 'express';
-import { somethingWrong, readOnlyEmail } from '../../config/static';
+import { UserModel } from '../../db/users';
 import {
-  getUsers,
-  getUserById,
-  updateUserById,
-  deleteUserById,
-} from '../../db/users';
+  somethingWrong,
+  readOnlyEmail,
+  succUpdate,
+  succDelete,
+} from '../../config/static';
+import {
+  _getListOfItems,
+  _getListById,
+  _updateItemById,
+  _deleteItemById,
+} from '../../db/shared';
 
 /* 
   @method: GET
@@ -17,10 +23,18 @@ export const getAllUsers = async (
   res: express.Response
 ) => {
   try {
-    const users = await getUsers();
-    return res.status(200).json(users);
+    const users = await _getListOfItems(UserModel);
+    return res.json({
+      code: 200,
+      data: users,
+      message: '',
+    });
   } catch (error) {
-    return res.status(400).json({ msg: somethingWrong });
+    return res.json({
+      code: 400,
+      data: null,
+      message: somethingWrong,
+    });
   }
 };
 
@@ -29,13 +43,24 @@ export const getAllUsers = async (
   @endpoint: /v1/user/:id
   @details: view a user informations
 */
-export const viewUser = async (req: express.Request, res: express.Response) => {
+export const viewUser = async (
+  req: express.Request,
+  res: express.Response
+) => {
   try {
     const { id } = req.params;
-    const user = await getUserById(id);
-    return res.json(user);
+    const user = await _getListById(UserModel, id);
+    return res.json({
+      code: 200,
+      data: user,
+      message: '',
+    });
   } catch (error) {
-    return res.status(400).json({ msg: somethingWrong });
+    return res.json({
+      code: 400,
+      data: null,
+      message: somethingWrong,
+    });
   }
 };
 
@@ -53,13 +78,21 @@ export const updateUser = async (
     const { email } = req.body;
 
     if (email) {
-      return res.status(400).json({ msg: `${readOnlyEmail} ${email}` });
+      return res
+        .status(400)
+        .json({ msg: `${readOnlyEmail} ${email}` });
     }
 
-    const updateUserInfo = await updateUserById(id, req.body);
-    return res.status(200).json(updateUserInfo).end();
+    await _updateItemById(UserModel, id, req.body);
+    return res
+      .json({ code: 200, data: null, message: succUpdate })
+      .end();
   } catch (error) {
-    return res.status(400).json({ msg: somethingWrong });
+    return res.json({
+      code: 400,
+      data: null,
+      message: somethingWrong,
+    });
   }
 };
 
@@ -74,9 +107,17 @@ export const deleteUser = async (
 ) => {
   try {
     const { id } = req.params;
-    const deleteRecord = await deleteUserById(id);
-    return res.json(deleteRecord);
+    await _deleteItemById(UserModel, id);
+    return res.json({
+      code: 200,
+      message: succDelete,
+      data: null,
+    });
   } catch (error) {
-    return res.status(400).json({ msg: somethingWrong });
+    return res.json({
+      code: 400,
+      data: null,
+      message: somethingWrong,
+    });
   }
 };
