@@ -1,11 +1,11 @@
-import express from "express";
-import { somethingWrong, readOnlyEmail } from "../../config/static";
+import express from 'express';
+import { somethingWrong, readOnlyEmail } from '../../config/static';
 import {
   getUsers,
   getUserById,
   updateUserById,
   deleteUserById,
-} from "../../db/users";
+} from '../../db/users';
 
 /* 
   @method: GET

@@ -1,11 +1,11 @@
-import express from "express";
-import { somethingWrong, blankField } from "../../config/static";
+import express from 'express';
+import { somethingWrong, blankField } from '../../config/static';
 import {
   getContacts,
   createContact,
   updateContactById,
   deleteContactById,
-} from "../../db/contact";
+} from '../../db/contact';
 
 /* 
   @method: GET

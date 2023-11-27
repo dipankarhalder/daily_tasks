@@ -1,13 +1,13 @@
-import express from "express";
-import http from "http";
+import express from 'express';
+import http from 'http';
 import mongoose from 'mongoose';
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
-import compression from "compression";
-import cors from "cors";
-import router from "./router";
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
+import cors from 'cors';
+import router from './router';
 import { envConfig } from './config/env';
-import { mongo_error, mongo_succ, run_server } from "./config/static";
+import { mongo_error, mongo_succ, run_server } from './config/static';
 
 const app = express();
 
@@ -21,10 +21,9 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-app.use("/", router());
+app.use('/', router());
 
 const server = http.createServer(app);
 server.listen(envConfig.PORT, () => {
-  console.log(`${run_server} ${envConfig.PORT}`)
-})
-
+  console.log(`${run_server} ${envConfig.PORT}`);
+});

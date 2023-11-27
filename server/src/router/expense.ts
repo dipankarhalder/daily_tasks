@@ -11,14 +11,6 @@ import {
 export default (router: express.Router) => {
   router.get(EXPENSES, isAuthenticated, getAllContacts);
   router.post(EXPENSE, isAuthenticated, addContact);
-  router.patch(
-    `${EXPENSE}/:id`,
-    isAuthenticated,
-    updateContact
-  );
-  router.delete(
-    `${EXPENSE}/:id`,
-    isAuthenticated,
-    deleteContact
-  );
+  router.patch(`${EXPENSE}/:id`, isAuthenticated, updateContact);
+  router.delete(`${EXPENSE}/:id`, isAuthenticated, deleteContact);
 };

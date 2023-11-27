@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const subNumbersSchema = new mongoose.Schema({
   retailer: String,
@@ -11,7 +11,7 @@ const ContactSchema = new mongoose.Schema({
   record: [subNumbersSchema],
   email: { type: String },
 });
-export const ContactModel = mongoose.model("Contact", ContactSchema);
+export const ContactModel = mongoose.model('Contact', ContactSchema);
 
 export const getContacts = () => {
   return ContactModel.find();

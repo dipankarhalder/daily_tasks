@@ -1,7 +1,7 @@
-import express from "express";
-import { get, merge } from "lodash";
-import { getUserBySessionToken } from "../db/users";
-import { accessDenied, somethingWrong, cookie_name } from "../config/static";
+import express from 'express';
+import { get, merge } from 'lodash';
+import { getUserBySessionToken } from '../db/users';
+import { accessDenied, somethingWrong, cookie_name } from '../config/static';
 
 export const isOwner = async (
   req: express.Request,
@@ -10,7 +10,7 @@ export const isOwner = async (
 ) => {
   try {
     const { id } = req.params;
-    const currentUserId = get(req, "identity._id") as string;
+    const currentUserId = get(req, 'identity._id') as string;
     if (!currentUserId) {
       return res.status(403).json({ msg: accessDenied });
     }

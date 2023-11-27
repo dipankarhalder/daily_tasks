@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import {
   cookie_name,
   userValidate,
@@ -11,9 +11,9 @@ import {
   wrongPass,
   existUser,
   somethingWrong,
-} from "../../config/static";
-import { getUserByEmail, getUserByPhone, createUser } from "../../db/users";
-import { random, authentication } from "../../helpers";
+} from '../../config/static';
+import { getUserByEmail, getUserByPhone, createUser } from '../../db/users';
+import { random, authentication } from '../../helpers';
 
 /* 
   @method: POST
@@ -31,7 +31,7 @@ export const login = async (req: express.Request, res: express.Response) => {
     }
 
     const user = await getUserByEmail(email).select(
-      "+authentication.salt +authentication.password"
+      '+authentication.salt +authentication.password'
     );
     if (!user) {
       return res.status(400).json({ msg: `${email} ${notEmail}` });
@@ -49,8 +49,8 @@ export const login = async (req: express.Request, res: express.Response) => {
     );
     await user.save();
     res.cookie(cookie_name, user.authentication.sessionToken, {
-      domain: "localhost",
-      path: "/",
+      domain: 'localhost',
+      path: '/',
     });
 
     return res.status(200).json(user).end();
