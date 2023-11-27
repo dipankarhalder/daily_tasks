@@ -1,5 +1,5 @@
 import express from "express";
-import { something_wrong, blank_validation_message } from "../../config/static";
+import { somethingWrong, blankField } from "../../config/static";
 import {
   getContacts,
   createContact,
@@ -20,7 +20,7 @@ export const getAllContacts = async (
     const users = await getContacts();
     return res.status(200).json(users);
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
 };
 
@@ -36,18 +36,16 @@ export const addContact = async (
   try {
     const { name, record } = req.body;
     if (!name) {
-      return res.status(400).json({ msg: `Name ${blank_validation_message}` });
+      return res.status(400).json({ msg: `Name ${blankField}` });
     }
     if (!record.length) {
-      return res
-        .status(400)
-        .json({ msg: `Records ${blank_validation_message}` });
+      return res.status(400).json({ msg: `Records ${blankField}` });
     }
 
     const addNewContact = await createContact(req.body);
     return res.status(200).json(addNewContact).end();
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
 };
 
@@ -65,7 +63,7 @@ export const updateContact = async (
     const newContact = await updateContactById(id, req.body);
     return res.status(200).json(newContact).end();
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
 };
 
@@ -83,6 +81,6 @@ export const deleteContact = async (
     const delContact = await deleteContactById(id);
     return res.json(delContact);
   } catch (error) {
-    return res.status(400).json({ msg: something_wrong });
+    return res.status(400).json({ msg: somethingWrong });
   }
 };
