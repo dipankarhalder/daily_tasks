@@ -8,7 +8,7 @@ const ExpSchema = new mongoose.Schema({
   expDate: { type: String, required: true },
   expRecord: [subExpSchema],
 });
-export const ExpModel = mongoose.model(
+export const ExpenseModel = mongoose.model(
   'Expense',
   ExpSchema
 );

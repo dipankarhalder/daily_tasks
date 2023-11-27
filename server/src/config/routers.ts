@@ -6,9 +6,6 @@ export const LOGIN = '/v1/auth/signin';
 export const USERS = '/v1/users';
 export const USER = '/v1/user/:id';
 
-// contact information
+// other api's route
 export const CONTACT = '/v1/contact/:id';
-
-// expense information
-export const EXPENSES = '/v1/expenses';
-export const EXPENSE = '/v1/expense';
+export const EXPENSE = '/v1/expense/:id';

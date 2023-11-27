@@ -10,13 +10,13 @@ import {
 
 export default (router: express.Router) => {
   router.get(
-    `${CONTACT}`,
+    CONTACT,
     isAuthenticated,
     isOwner,
     getAllContacts
   );
   router.post(
-    `${CONTACT}`,
+    CONTACT,
     isAuthenticated,
     isOwner,
     addContact
